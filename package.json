@@ -1,6 +1,6 @@
 {
   "name": "amplitude-insights",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Model Context Protocol server for Amplitude",
   "type": "module",
   "main": "dist/index.js",
