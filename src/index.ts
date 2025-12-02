@@ -519,6 +519,122 @@ server.registerTool(
   }
 );
 
+server.registerTool(
+  "create_annotation",
+  {
+    title: "Create Chart Annotation",
+    description: "Create an annotation to mark important dates (like feature releases and marketing campaigns) on charts in your Amplitude project",
+    inputSchema: {
+      app_id: z.number().describe("The Project ID of the project (required)"),
+      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format").describe("Date of the annotation (required)"),
+      label: z.string().min(1, "Label is required").describe("The title of your annotation (required)"),
+      chart_id: z.string().optional().describe("The ID of the chart to annotate. If omitted, annotation is global and appears on all charts"),
+      details: z.string().optional().describe("Additional details for the annotation")
+    }
+  },
+  async ({ app_id, date, label, chart_id, details }) => {
+    try {
+      const credentials = getAmplitudeCredentials();
+      const result = await amplitudeService.createAnnotation(credentials, { app_id, date, label, chart_id, details });
+      
+      return {
+        content: [
+          { 
+            type: "text", 
+            text: "Annotation created successfully:" 
+          },
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [{ 
+          type: "text", 
+          text: `Error creating annotation: ${error instanceof Error ? error.message : 'Unknown error'}` 
+        }],
+        isError: true
+      };
+    }
+  }
+);
+
+server.registerTool(
+  "get_all_annotations",
+  {
+    title: "Get All Chart Annotations",
+    description: "Get a list of all chart annotations in your Amplitude project",
+    inputSchema: {}
+  },
+  async () => {
+    try {
+      const credentials = getAmplitudeCredentials();
+      const result = await amplitudeService.getAllAnnotations(credentials);
+      
+      return {
+        content: [
+          { 
+            type: "text", 
+            text: "All annotations retrieved successfully:" 
+          },
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [{ 
+          type: "text", 
+          text: `Error getting annotations: ${error instanceof Error ? error.message : 'Unknown error'}` 
+        }],
+        isError: true
+      };
+    }
+  }
+);
+
+server.registerTool(
+  "get_annotation",
+  {
+    title: "Get Chart Annotation",
+    description: "Get a single chart annotation by its ID",
+    inputSchema: {
+      id: z.number().describe("Annotation ID (required)")
+    }
+  },
+  async ({ id }) => {
+    try {
+      const credentials = getAmplitudeCredentials();
+      const result = await amplitudeService.getAnnotation(credentials, id);
+      
+      return {
+        content: [
+          { 
+            type: "text", 
+            text: "Annotation retrieved successfully:" 
+          },
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [{ 
+          type: "text", 
+          text: `Error getting annotation: ${error instanceof Error ? error.message : 'Unknown error'}` 
+        }],
+        isError: true
+      };
+    }
+  }
+);
+
 server.registerResource(
   "amplitude_events",
   eventsResourceTemplate,
@@ -529,7 +645,7 @@ server.registerResource(
   eventsResourceHandler
 );
 
-console.error("✓ Registered 10 tools: query_events, segment_events, export_events, get_chart, get_active_users, event_segmentation_dashboard, funnel_analysis, retention_analysis, get_user_activity, get_events_list");
+console.error("✓ Registered 13 tools: query_events, segment_events, export_events, get_chart, get_active_users, event_segmentation_dashboard, funnel_analysis, retention_analysis, get_user_activity, get_events_list, create_annotation, get_all_annotations, get_annotation");
 console.error("✓ Registered 1 resource: amplitude_events");
 
 const transport = new StdioServerTransport();

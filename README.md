@@ -322,6 +322,57 @@ Get a list of all visible events in your Amplitude project with current week's t
 {}
 ```
 
+### 11. create_annotation
+
+Create an annotation to mark important dates (like feature releases and marketing campaigns) on charts in your Amplitude project.
+
+**Parameters:**
+
+- `app_id` (number): The Project ID of the project (required)
+- `date` (string): Date of the annotation in YYYY-MM-DD format (required)
+- `label` (string): The title of your annotation (required)
+- `chart_id` (string, optional): The ID of the chart to annotate. If omitted, annotation is global and appears on all charts
+- `details` (string, optional): Additional details for the annotation
+
+**Example:**
+
+```json
+{
+  "app_id": 12345,
+  "date": "2023-09-16",
+  "label": "Version 2.4 Release",
+  "details": "Added new user properties and improved performance"
+}
+```
+
+### 12. get_all_annotations
+
+Get a list of all chart annotations in your Amplitude project.
+
+**Parameters:** None
+
+**Example:**
+
+```json
+{}
+```
+
+### 13. get_annotation
+
+Get a single chart annotation by its ID.
+
+**Parameters:**
+
+- `id` (number): Annotation ID (required)
+
+**Example:**
+
+```json
+{
+  "id": 160427
+}
+```
+
 ## Available Resources
 
 ### amplitude_events

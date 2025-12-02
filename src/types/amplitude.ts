@@ -201,3 +201,24 @@ export interface RetentionAnalysisParams extends DashboardBaseParams {
   s?: string;
   g?: string;
 }
+
+/**
+ * Chart Annotations API - Create Annotation Parameters
+ */
+export interface CreateAnnotationParams {
+  app_id: number;
+  date: string;  // Format: YYYY-MM-DD
+  label: string;
+  chart_id?: string;
+  details?: string;
+}
+
+/**
+ * Chart Annotations API - Annotation Response
+ */
+export interface AnnotationResponse {
+  id: number;
+  date: string;
+  label: string;
+  details?: string;
+}
