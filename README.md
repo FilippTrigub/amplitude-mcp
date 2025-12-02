@@ -17,6 +17,8 @@ This MCP server enables AI assistants and other MCP clients to interact with the
 
 ## Installation
 
+### Option 1: Using Command Line Arguments
+
 ```json
 {
   "mcpServers": {
@@ -33,12 +35,36 @@ This MCP server enables AI assistants and other MCP clients to interact with the
 }
 ```
 
+### Option 2: Using Environment Variables (Recommended)
+
+```json
+{
+  "mcpServers": {
+    "amplitude": {
+      "command": "npx",
+      "args": ["-y", "amplitude-mcp"],
+      "env": {
+        "AMPLITUDE_API_KEY": "YOUR_API_KEY",
+        "AMPLITUDE_SECRET_KEY": "YOUR_SECRET_KEY"
+      }
+    }
+  }
+}
+```
+
 ### Required Credentials
 
-Amplitude API credentials must be provided using command line arguments:
+Amplitude API credentials can be provided in two ways:
 
-- `--amplitude-api-key`: Your Amplitude API key (required)
-- `--amplitude-secret-key`: Your Amplitude secret key (required)
+**Option 1: Command Line Arguments**
+- `--amplitude-api-key`: Your Amplitude API key
+- `--amplitude-secret-key`: Your Amplitude secret key
+
+**Option 2: Environment Variables (Recommended)**
+- `AMPLITUDE_API_KEY`: Your Amplitude API key
+- `AMPLITUDE_SECRET_KEY`: Your Amplitude secret key
+
+**Priority:** Command line arguments take precedence over environment variables if both are provided.
 
 ## Available Tools
 
