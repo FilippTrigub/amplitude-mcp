@@ -9,6 +9,10 @@ This MCP server enables AI assistants and other MCP clients to interact with the
 - Query event data with filters
 - Perform advanced segmentation with breakdowns
 - Export raw event data for detailed analysis
+- Analyze funnels and user retention
+- Get active user counts and event lists
+- Access user activity data
+- Retrieve data from saved charts
 - Access event data through structured resources
 
 ## Installation
@@ -157,6 +161,166 @@ Each event contains detailed information such as:
 - Location data: `country`, `region`, `city`, `location_lat`, `location_lng`
 - Custom properties: `event_properties`, `user_properties`, `group_properties`
 - Session data: `session_id`, `client_event_time`, `server_upload_time`
+
+### 4. get_chart
+
+Retrieve JSON results from any saved Amplitude chart using its chart ID.
+
+**Parameters:**
+
+- `chartId` (string): Chart ID from the chart's URL (required)
+
+**Example:**
+
+```json
+{
+  "chartId": "abc123"
+}
+```
+
+### 5. get_active_users
+
+Get the number of active or new users for a date range.
+
+**Parameters:**
+
+- `start` (string): First date in YYYYMMDD format (required)
+- `end` (string): Last date in YYYYMMDD format (required)
+- `m` (string, optional): User type - 'active' or 'new' (default: 'active')
+- `i` (number, optional): Interval - 1 (daily), 7 (weekly), 30 (monthly)
+- `s` (string, optional): Segment definitions as JSON string
+- `g` (string, optional): Property to group by
+
+**Example:**
+
+```json
+{
+  "start": "20220101",
+  "end": "20220131",
+  "m": "active",
+  "i": 7
+}
+```
+
+### 6. event_segmentation_dashboard
+
+Get event metrics with segmentation from the Dashboard API. Supports various metrics like uniques, totals, DAU percentage, etc.
+
+**Parameters:**
+
+- `e` (string): Event definition as JSON string (e.g., '{"event_type":"_active"}') (required)
+- `start` (string): Start date in YYYYMMDD format (required)
+- `end` (string): End date in YYYYMMDD format (required)
+- `m` (string, optional): Metric - uniques, totals, pct_dau, average, histogram, sums, value_avg, formula
+- `i` (number, optional): Interval - -300000 (real-time), -3600000 (hourly), 1 (daily), 7 (weekly), 30 (monthly)
+- `s` (string, optional): Segment definitions as JSON string
+- `g` (string, optional): Property to group by
+- `limit` (number, optional): Number of Group By values (default: 100, max: 1000)
+
+**Example:**
+
+```json
+{
+  "e": "{\"event_type\":\"_active\"}",
+  "start": "20220101",
+  "end": "20220131",
+  "m": "uniques",
+  "i": 1
+}
+```
+
+### 7. funnel_analysis
+
+Get funnel drop-off and conversion rates. Analyze user progression through a series of events.
+
+**Parameters:**
+
+- `events` (array): Array of event definitions as JSON strings (minimum 2 required)
+- `start` (string): Start date in YYYYMMDD format (required)
+- `end` (string): End date in YYYYMMDD format (required)
+- `mode` (string, optional): Funnel mode - 'ordered', 'unordered', 'sequential' (default: 'ordered')
+- `i` (number, optional): Interval - 1 (daily), 7 (weekly), 30 (monthly)
+- `s` (string, optional): Segment definitions as JSON string
+- `g` (string, optional): Property to group by (limit: 1)
+- `cs` (number, optional): Conversion window in seconds (default: 2592000 = 30 days)
+- `limit` (number, optional): Number of Group By values
+
+**Example:**
+
+```json
+{
+  "events": [
+    "{\"event_type\":\"view_product\"}",
+    "{\"event_type\":\"add_to_cart\"}",
+    "{\"event_type\":\"purchase\"}"
+  ],
+  "start": "20220101",
+  "end": "20220131",
+  "mode": "ordered"
+}
+```
+
+### 8. retention_analysis
+
+Get user retention metrics. Analyze how many users return to perform an action after their initial action.
+
+**Parameters:**
+
+- `se` (string): Start event as JSON string (e.g., '{"event_type":"_new"}') (required)
+- `re` (string): Return event as JSON string (e.g., '{"event_type":"_active"}') (required)
+- `start` (string): Start date in YYYYMMDD format (required)
+- `end` (string): End date in YYYYMMDD format (required)
+- `rm` (string, optional): Retention type - 'bracket', 'rolling', 'n-day' (default: 'n-day')
+- `rb` (string, optional): Bracket definition as JSON (required if rm='bracket')
+- `i` (number, optional): Interval - 1 (daily), 7 (weekly), 30 (monthly)
+- `s` (string, optional): Segment definitions as JSON string
+- `g` (string, optional): Property to group by
+
+**Example:**
+
+```json
+{
+  "se": "{\"event_type\":\"_new\"}",
+  "re": "{\"event_type\":\"_active\"}",
+  "start": "20220101",
+  "end": "20220131",
+  "rm": "n-day",
+  "i": 7
+}
+```
+
+### 9. get_user_activity
+
+Get detailed activity data for a specific user by their Amplitude ID.
+
+**Parameters:**
+
+- `user` (string): Amplitude ID of the user (required)
+- `offset` (number, optional): Zero-indexed offset from most recent event (default: 0)
+- `limit` (number, optional): Number of events to return (default: 1000, max: 1000)
+- `direction` (string, optional): Direction - 'earliest' or 'latest' (default: 'latest')
+
+**Example:**
+
+```json
+{
+  "user": "123456789",
+  "limit": 100,
+  "direction": "latest"
+}
+```
+
+### 10. get_events_list
+
+Get a list of all visible events in your Amplitude project with current week's totals, uniques, and % DAU.
+
+**Parameters:** None
+
+**Example:**
+
+```json
+{}
+```
 
 ## Available Resources
 
