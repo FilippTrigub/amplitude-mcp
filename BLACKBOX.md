@@ -78,7 +78,7 @@ Add to your MCP client configuration (e.g., Claude Desktop):
       "command": "npx",
       "args": [
         "-y",
-        "amplitude-mcp",
+        "amplitude-insights",
         "--amplitude-api-key=YOUR_API_KEY",
         "--amplitude-secret-key=YOUR_SECRET_KEY"
       ]
@@ -168,11 +168,11 @@ This MCP server bridges AI assistants (like Claude) with Amplitude Analytics, en
 
 ### Package Distribution
 
-- **Package Name**: `amplitude-mcp`
+- **Package Name**: `amplitude-insights`
 - **Version**: 0.0.2
 - **License**: MIT
 - **Published Files**: `dist/`, `bin/`
-- **Binary**: `amplitude-mcp` CLI command
+- **Binary**: `amplitude-insights` CLI command
 
 ### Key Dependencies
 

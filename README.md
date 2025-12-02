@@ -26,7 +26,7 @@ This MCP server enables AI assistants and other MCP clients to interact with the
       "command": "npx",
       "args": [
         "-y",
-        "amplitude-mcp",
+        "amplitude-insights",
         "--amplitude-api-key=YOUR_API_KEY",
         "--amplitude-secret-key=YOUR_SECRET_KEY"
       ]
@@ -42,7 +42,7 @@ This MCP server enables AI assistants and other MCP clients to interact with the
   "mcpServers": {
     "amplitude": {
       "command": "npx",
-      "args": ["-y", "amplitude-mcp"],
+      "args": ["-y", "amplitude-insights"],
       "env": {
         "AMPLITUDE_API_KEY": "YOUR_API_KEY",
         "AMPLITUDE_SECRET_KEY": "YOUR_SECRET_KEY"
@@ -420,7 +420,7 @@ amplitude://events/user_login/2023-01-01/2023-01-31
 ### Project Structure
 
 ```
-amplitude-mcp/
+amplitude-insights/
 ├── src/
 │   ├── index.ts                  # Main entry point with MCP server setup
 │   ├── services/

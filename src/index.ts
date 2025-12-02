@@ -19,7 +19,7 @@ try {
 
 // Create MCP server
 export const server = new McpServer({
-  name: "amplitude-mcp",
+  name: "amplitude-insights",
   version: "0.0.1"
 });
 

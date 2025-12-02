@@ -1,11 +1,11 @@
 {
-  "name": "amplitude-mcp",
+  "name": "amplitude-insights",
   "version": "0.0.3",
   "description": "Model Context Protocol server for Amplitude",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "amplitude-mcp": "./bin/cli.js"
+    "amplitude-insights": "./bin/cli.js"
   },
   "scripts": {
     "dev": "npx tsc --watch",

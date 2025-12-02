@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// This is the CLI entry point for the amplitude-mcp package
+// This is the CLI entry point for the amplitude-insights package
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
