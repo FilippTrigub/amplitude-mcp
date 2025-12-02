@@ -8,6 +8,7 @@ This MCP server enables AI assistants and other MCP clients to interact with the
 
 - Query event data with filters
 - Perform advanced segmentation with breakdowns
+- Export raw event data for detailed analysis
 - Access event data through structured resources
 
 ## Installation
@@ -117,6 +118,45 @@ Advanced event segmentation with breakdowns.
   ]
 }
 ```
+
+### 3. export_events
+
+Export raw event data from Amplitude. Returns detailed event records including user properties, event properties, device information, and more.
+
+**Parameters:**
+
+- `start` (string): Start time in YYYYMMDDTHH format (e.g., "20220201T05")
+- `end` (string): End time in YYYYMMDDTHH format (e.g., "20220201T23")
+- `limit` (number, optional): Maximum number of events to return (default: 1000, max: 10000)
+
+**Important Notes:**
+
+- Time format uses hours (00-23), not days
+- Maximum time range: 365 days
+- Data is available with a minimum 2-hour delay after server receipt
+- Returns 404 if no data exists for the time range
+- Maximum response size: 4GB (use smaller time ranges if exceeded)
+- All timestamps are in UTC
+
+**Example:**
+
+```json
+{
+  "start": "20220201T00",
+  "end": "20220201T23",
+  "limit": 5000
+}
+```
+
+**Response includes:**
+
+Each event contains detailed information such as:
+- Event metadata: `event_type`, `event_time`, `event_id`
+- User information: `user_id`, `amplitude_id`, `device_id`
+- Device details: `device_type`, `device_family`, `os_name`, `os_version`
+- Location data: `country`, `region`, `city`, `location_lat`, `location_lng`
+- Custom properties: `event_properties`, `user_properties`, `group_properties`
+- Session data: `session_id`, `client_event_time`, `server_upload_time`
 
 ## Available Resources
 

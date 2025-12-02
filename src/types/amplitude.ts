@@ -91,3 +91,57 @@ export interface AmplitudeErrorResponse {
   code?: number;
   message?: string;
 }
+
+/**
+ * Export API request parameters
+ */
+export interface ExportParams {
+  start: string;  // Format: YYYYMMDDTHH (e.g., 20220201T05)
+  end: string;    // Format: YYYYMMDDTHH (e.g., 20220201T05)
+}
+
+/**
+ * Export API event data structure
+ */
+export interface ExportedEvent {
+  server_received_time?: string;
+  app?: number;
+  device_carrier?: string;
+  city?: string;
+  user_id?: string;
+  uuid?: string;
+  event_time?: string;
+  platform?: string;
+  os_version?: string;
+  amplitude_id?: number;
+  processed_time?: string;
+  version_name?: string;
+  ip_address?: string;
+  paying?: boolean;
+  dma?: string;
+  group_properties?: Record<string, any>;
+  user_properties?: Record<string, any>;
+  client_upload_time?: string;
+  $insert_id?: string;
+  event_type?: string;
+  library?: string;
+  amplitude_attribution_ids?: string;
+  device_type?: string;
+  start_version?: string;
+  location_lng?: number;
+  location_lat?: number;
+  server_upload_time?: string;
+  event_id?: number;
+  os_name?: string;
+  groups?: Record<string, any>;
+  event_properties?: Record<string, any>;
+  data?: Record<string, any>;
+  device_id?: string;
+  language?: string;
+  country?: string;
+  region?: string;
+  session_id?: number;
+  device_family?: string;
+  sample_rate?: any;
+  client_event_time?: string;
+}
