@@ -12,7 +12,9 @@ import {
   UserActivityParams,
   EventSegmentationDashboardParams,
   FunnelAnalysisParams,
-  RetentionAnalysisParams
+  RetentionAnalysisParams,
+  CreateAnnotationParams,
+  AnnotationResponse
 } from '../types/amplitude.js';
 
 const gunzip = promisify(zlib.gunzip);
@@ -379,6 +381,107 @@ export class AmplitudeService {
         throw new Error(`Failed to get events list: ${error.message}`);
       }
       throw new Error('Unknown error occurred while getting events list');
+    }
+  }
+
+  /**
+   * Create a chart annotation
+   * @param credentials Amplitude API credentials
+   * @param params Annotation parameters
+   * @returns Created annotation data
+   */
+  async createAnnotation(credentials: AmplitudeCredentials, params: CreateAnnotationParams): Promise<any> {
+    const queryParams = new URLSearchParams({
+      app_id: params.app_id.toString(),
+      date: params.date,
+      label: params.label,
+      ...(params.chart_id && { chart_id: params.chart_id }),
+      ...(params.details && { details: params.details })
+    });
+    
+    const url = `${this.baseUrl}/annotations?${queryParams.toString()}`;
+    const headers = this.buildHeaders(credentials);
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Amplitude API error: ${errorText || response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to create annotation: ${error.message}`);
+      }
+      throw new Error('Unknown error occurred while creating annotation');
+    }
+  }
+
+  /**
+   * Get all chart annotations
+   * @param credentials Amplitude API credentials
+   * @returns List of all annotations
+   */
+  async getAllAnnotations(credentials: AmplitudeCredentials): Promise<any> {
+    const url = `${this.baseUrl}/annotations`;
+    const headers = this.buildHeaders(credentials);
+    
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers,
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Amplitude API error: ${errorText || response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get annotations: ${error.message}`);
+      }
+      throw new Error('Unknown error occurred while getting annotations');
+    }
+  }
+
+  /**
+   * Get a single chart annotation by ID
+   * @param credentials Amplitude API credentials
+   * @param annotationId Annotation ID
+   * @returns Annotation data
+   */
+  async getAnnotation(credentials: AmplitudeCredentials, annotationId: number): Promise<any> {
+    const queryParams = new URLSearchParams({
+      id: annotationId.toString()
+    });
+    
+    const url = `${this.baseUrl}/annotations?${queryParams.toString()}`;
+    const headers = this.buildHeaders(credentials);
+    
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers,
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Amplitude API error: ${errorText || response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Failed to get annotation: ${error.message}`);
+      }
+      throw new Error('Unknown error occurred while getting annotation');
     }
   }
 
