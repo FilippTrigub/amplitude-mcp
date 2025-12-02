@@ -145,3 +145,59 @@ export interface ExportedEvent {
   sample_rate?: any;
   client_event_time?: string;
 }
+
+/**
+ * Dashboard API - Common Parameters
+ */
+export interface DashboardBaseParams {
+  start: string;  // Format: YYYYMMDD
+  end: string;    // Format: YYYYMMDD
+}
+
+/**
+ * Dashboard API - User Activity Parameters
+ */
+export interface UserActivityParams {
+  user: string;
+  offset?: number;
+  limit?: number;
+  direction?: 'earliest' | 'latest';
+}
+
+/**
+ * Dashboard API - Event Segmentation Parameters
+ */
+export interface EventSegmentationDashboardParams extends DashboardBaseParams {
+  e: string;  // JSON encoded event
+  m?: string;  // Metric type
+  i?: number;  // Interval
+  s?: string;  // Segment definitions (JSON)
+  g?: string;  // Group by property
+  limit?: number;
+}
+
+/**
+ * Dashboard API - Funnel Analysis Parameters
+ */
+export interface FunnelAnalysisParams extends DashboardBaseParams {
+  events: string[];  // Array of JSON encoded events
+  mode?: 'ordered' | 'unordered' | 'sequential';
+  i?: number;
+  s?: string;
+  g?: string;
+  cs?: number;  // Conversion window in seconds
+  limit?: number;
+}
+
+/**
+ * Dashboard API - Retention Analysis Parameters
+ */
+export interface RetentionAnalysisParams extends DashboardBaseParams {
+  se: string;  // Start event (JSON)
+  re: string;  // Return event (JSON)
+  rm?: 'bracket' | 'rolling' | 'n-day';
+  rb?: string;  // Bracket definition (JSON)
+  i?: number;
+  s?: string;
+  g?: string;
+}
