@@ -19,9 +19,8 @@ async function runServer() {
     
     // The server should already be created and exported from index.js
     // The connection to StdioServerTransport is already handled in index.js
-    
-    console.log('Amplitude MCP server started');
-    console.log('Use Ctrl+C to stop the server');
+    // Note: All logging is done via console.error() in index.js to avoid polluting stdout
+    // stdout is reserved exclusively for JSON-RPC messages in MCP stdio transport
   } catch (error) {
     console.error('Failed to start Amplitude MCP server:', error);
     process.exit(1);
