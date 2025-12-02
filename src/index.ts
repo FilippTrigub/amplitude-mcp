@@ -6,12 +6,24 @@ import { eventsResourceTemplate, eventsResourceHandler } from "./resources/event
 import { EventSegmentationEvent, EventSegmentationFilter, EventSegmentationBreakdown } from "./types/amplitude.js";
 import { getAmplitudeCredentials } from "./utils/config.js";
 
+console.error("Amplitude MCP Server initializing...");
+
+// Validate credentials early
+try {
+  const credentials = getAmplitudeCredentials();
+  console.error("✓ Credentials loaded successfully");
+} catch (error) {
+  console.error("✗ Failed to load credentials:", error instanceof Error ? error.message : 'Unknown error');
+  process.exit(1);
+}
+
 // Create MCP server
 export const server = new McpServer({
   name: "amplitude-mcp",
-  version: "0.0.1",
-  description: "MCP server for Amplitude Analytics API"
+  version: "0.0.1"
 });
+
+console.error("✓ MCP Server created");
 
 server.tool("query_events",
   {
@@ -152,11 +164,62 @@ server.tool("segment_events",
   }
 );
 
+server.tool("export_events",
+  {
+    start: z.string().regex(/^\d{8}T\d{2}$/, "Start time must be in YYYYMMDDTHH format (e.g., 20220201T05)"),
+    end: z.string().regex(/^\d{8}T\d{2}$/, "End time must be in YYYYMMDDTHH format (e.g., 20220201T23)"),
+    limit: z.number().min(1).max(10000).optional().describe("Maximum number of events to return (default: 1000, max: 10000)")
+  },
+  async ({ start, end, limit }) => {
+    try {
+      const credentials = getAmplitudeCredentials();
+
+      const exportParams = {
+        start,
+        end
+      };
+
+      const events = await amplitudeService.exportEvents(credentials, exportParams);
+      
+      // Apply limit if specified
+      const limitedEvents = limit ? events.slice(0, limit) : events.slice(0, 1000);
+      const totalEvents = events.length;
+      
+      return {
+        content: [
+          { 
+            type: "text", 
+            text: `Raw event data exported successfully. Total events: ${totalEvents}, Returned: ${limitedEvents.length}` 
+          },
+          {
+            type: "text",
+            text: JSON.stringify(limitedEvents, null, 2)
+          }
+        ]
+      };
+    } catch (error) {
+      return {
+        content: [{ 
+          type: "text", 
+          text: `Error exporting events: ${error instanceof Error ? error.message : 'Unknown error'}` 
+        }],
+        isError: true
+      };
+    }
+  }
+);
+
 server.resource(
   "amplitude_events",
   eventsResourceTemplate,
   eventsResourceHandler
 );
 
+console.error("✓ Registered 3 tools: query_events, segment_events, export_events");
+console.error("✓ Registered 1 resource: amplitude_events");
+
 const transport = new StdioServerTransport();
 await server.connect(transport);
+
+console.error("✓ Server connected and ready on stdio transport");
+console.error("Amplitude MCP Server is running. Waiting for requests...");
